@@ -1,28 +1,58 @@
-import { Application, Loader, Sprite } from 'pixi.js'
+import { Application, Container, Loader, Point, Sprite } from 'pixi.js'
 
 const app = new Application({
 	view: document.getElementById("pixi-canvas") as HTMLCanvasElement,
 	resolution: window.devicePixelRatio || 1,
 	autoDensity: true,
 	backgroundColor: 0x6495ed,
-	width: 640,
-	height: 480
+	width: 1200,
+	height: 720
 });
 
-Loader.shared.add({url: "./dino dino.jpg", name: "myDino"})
-Loader.shared.add({url: "./clampy.png", name: "Clampy"})
+window.addEventListener("resize", ()=>{
+	const scaleX = window.innerWidth / app.screen.width;
+	const scaleY = window.innerHeight / app.screen.height;
+	const scale = Math.min(scaleX, scaleY);
+
+	const gameWidth = Math.round(app.screen.width * scale);
+	const gameHeight = Math.round(app.screen.height * scale);
+
+	const marginHorizontal = Math.floor((window.innerWidth - gameWidth) / 2);
+	const marginVertical = Math.floor((window.innerHeight - gameHeight) / 2);
+
+	app.view.style.width = gameWidth + "px";
+	app.view.style.height = gameHeight + "px";
+
+	app.view.style.marginLeft = marginHorizontal + "px";
+	app.view.style.marginRight = marginHorizontal + "px";
+
+	app.view.style.marginTop = marginVertical + "px";
+	app.view.style.marginBottom = marginVertical + "px";
+});
+window.dispatchEvent(new Event("resize"));
+
+Loader.shared.add({url: "./dino.png" , name: "Dino"})
+Loader.shared.add({url: "./dinohat.png", name: "Hat"})
 
 Loader.shared.onComplete.add(()=>{
-	const clampy: Sprite = Sprite.from("myDino");
+	const dino: Sprite = Sprite.from("Dino");
 
-	console.log("Hola mundo!", clampy.width, clampy.height);
+	const hat: Sprite = Sprite.from("Hat");
 
-	clampy.anchor.set(0);
+	const dinoWithHat: Container = new Container();
 
-	clampy.x = app.screen.width / 150;
-	clampy.y = app.screen.height / 300;
+	hat.position.set(-20,-350);
 
-	app.stage.addChild(clampy);
+	dinoWithHat.addChild(dino);
+	dinoWithHat.addChild(hat);
+
+	dinoWithHat.scale.set(0.5);
+	dinoWithHat.x= 200;
+	dinoWithHat.y= 300;
+
+	console.log(hat.toGlobal(new Point()));
+
+	app.stage.addChild(dinoWithHat)
 });
 
 Loader.shared.load();
