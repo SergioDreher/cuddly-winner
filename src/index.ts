@@ -1,4 +1,6 @@
-import { Application, Container, Loader, Point, Sprite } from 'pixi.js'
+import { Application, Loader } from 'pixi.js'
+import { assets } from './assets';
+import { Scene } from './Scene';
 
 const app = new Application({
 	view: document.getElementById("pixi-canvas") as HTMLCanvasElement,
@@ -31,28 +33,11 @@ window.addEventListener("resize", ()=>{
 });
 window.dispatchEvent(new Event("resize"));
 
-Loader.shared.add({url: "./dino.png" , name: "Dino"})
-Loader.shared.add({url: "./dinohat.png", name: "Hat"})
+Loader.shared.add(assets);
 
 Loader.shared.onComplete.add(()=>{
-	const dino: Sprite = Sprite.from("Dino");
-
-	const hat: Sprite = Sprite.from("Hat");
-
-	const dinoWithHat: Container = new Container();
-
-	hat.position.set(-20,-350);
-
-	dinoWithHat.addChild(dino);
-	dinoWithHat.addChild(hat);
-
-	dinoWithHat.scale.set(0.5);
-	dinoWithHat.x= 200;
-	dinoWithHat.y= 300;
-
-	console.log(hat.toGlobal(new Point()));
-
-	app.stage.addChild(dinoWithHat)
+	const myScene = new Scene();
+	app.stage.addChild(myScene);
 });
 
 Loader.shared.load();
